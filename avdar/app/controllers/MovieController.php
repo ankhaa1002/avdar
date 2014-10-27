@@ -17,15 +17,6 @@ class MovieController extends \BaseController {
 		return $view;
 	}
 
-	public function getList(){
-		$hereglegch = Session::get('user');
-		Movie::all();
-		$view = View::make('admin.movie.list');
-		$view->title = 'Кино жагсаалт';
-		$view->user = $hereglegch;
-		return $view;
-	}
-
 	/**
 	 * Show the form for creating a new resource.
 	 *

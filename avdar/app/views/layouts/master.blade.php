@@ -174,6 +174,8 @@
 
     {{ HTML::script('js/jquery.validate.min.js') }}
 
+    {{ HTML::script('js/jquery.easyui.min.js') }}
+
     <script type="text/javascript">
          jQuery(document).ready(function () {
             
@@ -202,6 +204,22 @@
                     alert('Файлын төрөл буруу байна!');
                 }
             });
+
+            $('#movie-table').datagrid({
+                url: 'movielist',
+                pagination: true,
+                pageSize: 20,
+                rownumbers: true,
+                fitColumns: true,
+                singleSelect: true,
+                sortName: 'name',
+                sortOrder: 'asc',
+                columns: [[
+                        {field: 'name', title: 'Киноны нэр'},
+                        {field: 'director', title: 'Киноны найруулагч'}
+                    ]]
+            });
+
         });
     </script>
 

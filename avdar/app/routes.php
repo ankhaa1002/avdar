@@ -24,3 +24,7 @@ Route::get('admin/dologout',array('as'=>'logout','uses'=>'AdminController@dologo
 Route::resource('admin/movie', 'MovieController');
 
 Route::post('admin/movie/create',array('as'=>'movie_create','uses'=>'MovieController@movieCreate'));
+
+Route::post('admin/movielist',function(){
+	return Movie::all();
+});
