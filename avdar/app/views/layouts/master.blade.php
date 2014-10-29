@@ -21,7 +21,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Авдар</a>
+                <a class="navbar-brand" href="{{ url('admin') }}">Авдар</a>
             </div>
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav">
@@ -216,11 +216,44 @@
                 sortOrder: 'asc',
                 columns: [[
                         {field: 'name', title: 'Киноны нэр'},
-                        {field: 'director', title: 'Киноны найруулагч'}
-                    ]]
+                        {field: 'genres',title: 'Киноны ангилал', 
+                        formatter: function (value, rowData, rowIndex) {
+                            var genre_types = '';
+                            var counter = 0;
+                            var size = rowData.genres.length;
+                            for(i = 0;i < size; i++){
+                                if(counter == size - 1){
+                                    genre_types += rowData.genres[i]['genre_name'];  
+                                }
+                                else{
+                                    genre_types += rowData.genres[i]['genre_name'] + ', ';
+                                }
+
+                                counter++;
+                            }
+                            return  genre_types;
+                        }},
+                        {field: 'director', title: 'Найруулагч'},
+                        {field: 'release_date', title: 'Гарсан огноо'},
+                        {field: 'rating', title: 'IMDB'},
+                        {field: 'language', title: 'Хэл'},
+                        {field: 'created_at', title: 'Оруулсан огноо'},
+                        {field: 'updated_at', title: 'Шинэчилсэн огноо'}
+                ]]
             });
 
         });
+
+        function editMovie(){
+            $row = $('#movie-table').datagrid('getSelected');
+            if($row != null){
+                window.location.href = 'movie/'+$row['id']+'/edit';
+            }
+            else{
+                alert('Сонгоно уу!')
+            }
+            
+        }
     </script>
 
 </body>

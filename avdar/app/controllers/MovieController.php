@@ -10,10 +10,15 @@ class MovieController extends \BaseController {
 	public function index()
 	{
 		$hereglegch = Session::get('user');
-		Movie::all();
+		$kinos = Movie::with(array('genres' => function($query)
+				{
+				    $query->join('genre','movie_genre.genre_id','=','genre.genre_id');
+				}))->get();
+
 		$view = View::make('admin.movie.index');
 		$view->title = 'Кино жагсаалт';
 		$view->user = $hereglegch;
+		$view->movies = $kinos;
 		return $view;
 	}
 
@@ -32,19 +37,17 @@ class MovieController extends \BaseController {
 		return $view;
 	}
 
-	public function movieCreate(){
 
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @return Response
+	 */
+	public function store()
+	{
 		$destinationPath = 'uploads/movies/covers';
-		$fileSize = Input::file('moviecover')->getSize();
-
 		$fileName = 'file_'.mt_rand(99999999, 9999999999).'.'.Input::file('moviecover')->getClientOriginalExtension();
-
-		if($fileSize > 10000000){
-			Redirect::to('admin/movie/create')->with('file_upload_error','Файлын хэмжээ хэтэрсэн байна!');
-		}
-		else{
-			Input::file('moviecover')->move($destinationPath,$fileName);
-		}
+		$this->uploadFile($destinationPath,$fileName,Input::file('moviecover'));
 
 		$movie = new Movie;
 		$movie->featured_image = $destinationPath.'/'.$fileName;
@@ -72,22 +75,17 @@ class MovieController extends \BaseController {
 			    array('movie_id' => $last_inserted_id, 'genre_id' => intval($genre))
 			);
 		}
-
-
-		
-
 		return Redirect::to('admin/movie/')->with('message','Кино амжилттай нэмэгдлээ');
 	}
 
-
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		//
+	public function uploadFile($destinationPath,$fileName,$file){
+		$fileSize = $file->getSize();
+		if($fileSize > 10000000){
+			Redirect::to('admin/movie/create')->with('file_upload_error','Файлын хэмжээ хэтэрсэн байна!');
+		}
+		else{
+			$file->move($destinationPath,$fileName);
+		}
 	}
 
 
@@ -111,7 +109,19 @@ class MovieController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		$movie = Movie::with(array('genres' => function($query)
+				{
+				    $query->join('genre','movie_genre.genre_id','=','genre.genre_id');
+				}))->get()->find($id);
+
+		$oneToManys = Movie::find($id)->genres;
+		$hereglegch = Session::get('user');
+		$view = View::make('admin.movie.edit',compact('movie'));
+		$view->title = 'Кино нэмэх';
+		$view->movieGenres = Movie::find($id)->genres->lists('genre_id');
+		$view->genres = Genre::lists('genre_name','genre_id');
+		$view->user = $hereglegch;
+		return $view;
 	}
 
 
@@ -123,7 +133,45 @@ class MovieController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$genres = DB::table('movie_genre')->where('movie_id','=',$id)->delete();
+
+		$movie = Movie::find($id);
+		$featured_image = $movie->featured_image;
+
+		if(Input::file('featured_image') != null){
+			$destinationPath = 'uploads/movies/covers';
+			$fileName = 'file_'.mt_rand(99999999, 9999999999).'.'.Input::file('featured_image')->getClientOriginalExtension();
+			$this->uploadFile($destinationPath,$fileName,Input::file('featured_image'));
+			$featured_image = $destinationPath.'/'.$fileName;
+		}
+
+		$movie->featured_image = $featured_image;
+		$movie->name = Input::get('name');
+		$movie->rating = Input::get('rating');
+		$movie->cast = Input::get('cast');
+		$movieDate = strtotime(Input::get('release_date'));
+		$realMovieDate = date('Y-m-d',$movieDate);
+		$movie->release_date = $realMovieDate;
+		$movie->length = Input::get('length');
+		$movie->language = Input::get('language');
+		$movie->synopsis = Input::get('synopsis');
+		$movie->movie_trailer = Input::get('movie_trailer');
+		$movie->is_upcoming = ((Input::get('is_upcoming') == null) ? 0 : 1);
+		$movie->imdb_link = Input::get('imdb_link');
+		$movie->director = Input::get('director');
+		$movie->movie_content = Input::get('movie_content');
+		$movie->save();
+		
+		if(Input::get('genres') != null){
+			foreach (Input::get('genres') as $janr) {
+				DB::table('movie_genre')->insert(
+				    array('movie_id' => $id, 'genre_id' => intval($janr))
+				);
+			}
+		}
+
+		return Redirect::to('admin/movie')->with('message','Өөрчлөлт амжилттай хадгалагдлаа!');
+
 	}
 
 
@@ -135,7 +183,10 @@ class MovieController extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$movie = Movie::find($id);
+		$movie->delete();
+
+		return Redirect::route('admin.movie.index')->with('message','Киног амжилттай устгалаа!');
 	}
 
 

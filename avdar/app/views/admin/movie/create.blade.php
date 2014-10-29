@@ -7,7 +7,7 @@
 	<div class="panel-heading">
 	    <h3 class="panel-title">Кино нэмэх</h3>
 	</div>
-	<div class="panel-body">
+	<div class="panel-body" style="padding: 20px;">
 		<div class="col-lg-12">
 			<div class="col-lg-6">
 			
@@ -22,7 +22,11 @@
 				<div class="form-group">
 				{{ Form::label('Киноны ангилал:') }}
 				<br>
-				{{ Form::select('genres[]', $genres, '',array('id'=>'genres','multiple')) }}
+				<?php $count = 1; ?>
+				@foreach($genres as $genre)
+				{{ Form::checkbox('genres[]', $count) }} {{ $genre }}
+				<?php $count++ ?>
+				@endforeach
 				</div>
 				<div class="form-group">
 				{{ Form::label('Киноны үнэлгээ:') }}
