@@ -1,4 +1,4 @@
-.panel {
+/*.panel {
   overflow: hidden;
   text-align: left;
   margin: 0;
@@ -122,7 +122,7 @@
   color: #777;
   height: 16px;
   line-height: 16px;
-}
+}*/
 .accordion {
   overflow: hidden;
   border-width: 1px;
@@ -1162,7 +1162,8 @@
   height: auto;
 }
 .datagrid-header .datagrid-cell span {
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: bold;
 }
 .datagrid-cell-group {
   text-align: center;

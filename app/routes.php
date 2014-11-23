@@ -11,7 +11,7 @@
   |
  */
 
-Route::get('/', array('uses' => 'AdminController@home'));
+Route::get('/', array('uses' => 'MainController@index'));
 
 Route::get('admin/login', array('as' => 'admin_login', 'uses' => 'AdminController@showLogin'));
 
@@ -25,9 +25,8 @@ Route::resource('admin/movie', 'MovieController');
 
 Route::post('admin/movie/create', array('as' => 'movie_create', 'uses' => 'MovieController@store'));
 
-Route::post('admin/movielist', function() {
+Route::post('admin/movielist', array('as'=>'movie_list','uses'=>'MovieController@getMovieList'));
 
-    return Movie::with(array('genres' => function($query) {
-            $query->join('genre', 'movie_genre.genre_id', '=', 'genre.genre_id');
-        }))->get();
-});
+Route::resource('admin/genre', 'GenreController');
+
+Route::post('admin/genrelist', array('as'=>'genre_list','uses'=>'GenreController@getGenreList'));

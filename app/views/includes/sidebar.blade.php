@@ -7,6 +7,7 @@
         <ul id="demo" class="{{ Request::is('admin/movie*') ? 'collapse in' : 'collapse' }}">
             <li class="{{ Request::is('admin/movie/create') ? 'active' : '' }}">{{ HTML::link('admin/movie/create','Нэмэх') }}</li>
         	<li class="{{ Request::is('admin/movie') ? 'active' : '' }}">{{ HTML::link('admin/movie/','Жагсаалт') }}</li>
+                <li class="{{ Request::is('admin/genre') ? 'active' : '' }}">{{ HTML::link('admin/genre/','Жанр') }}</li>
         </ul>
     </li>
 </ul>

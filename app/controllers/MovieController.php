@@ -11,8 +11,8 @@ class MovieController extends \BaseController {
         $view->title = 'Кино жагсаалт';
         $view->user = Session::get('admin');
         $view->movies = Movie::with(array('genres' => function($query) {
-                $query->join('genre', 'movie_genre.genre_id', '=', 'genre.genre_id');
-            }))->get();
+                        $query->join('genre', 'movie_genre.genre_id', '=', 'genre.id');
+                    }))->get();
         return $view;
     }
 
@@ -25,7 +25,7 @@ class MovieController extends \BaseController {
         $view = View::make('admin.movie.create');
         $view->title = 'Кино нэмэх';
         $view->user = Session::get('admin');
-        $view->genres = Genre::lists('genre_name', 'genre_id');
+        $view->genres = Genre::lists('genre_name', 'id');
         return $view;
     }
 
@@ -75,6 +75,7 @@ class MovieController extends \BaseController {
         } else {
             $file->move($destinationPath, $fileName);
         }
+        
     }
 
     /**
@@ -95,13 +96,13 @@ class MovieController extends \BaseController {
      */
     public function edit($id) {
         $movie = Movie::with(array('genres' => function($query) {
-                $query->join('genre', 'movie_genre.genre_id', '=', 'genre.genre_id');
-            }))->get()->find($id);
+                        $query->join('genre', 'movie_genre.genre_id', '=', 'genre.id');
+                    }))->get()->find($id);
 
         $view = View::make('admin.movie.edit', compact('movie'));
         $view->title = 'Кино нэмэх';
         $view->movieGenres = Movie::find($id)->genres->lists('genre_id');
-        $view->genres = Genre::lists('genre_name', 'genre_id');
+        $view->genres = Genre::all();
         $view->user = Session::get('admin');
         return $view;
     }
@@ -164,6 +165,29 @@ class MovieController extends \BaseController {
         $movie->delete();
 
         return Redirect::route('admin.movie.index')->with('message', 'Киног амжилттай устгалаа!');
+    }
+
+    public function getMovieList() {
+        $name = Input::get('movie_name');
+        $page = Input::get('page');
+        $rows = Input::get('rows');
+        $offset = ($page - 1) * $rows;
+
+        $count = Movie::where('name', 'LIKE', '%' . $name . '%')->count();
+        
+        $movieList = Movie::with(array('genres' => function($query) {
+                                $query->join('genre', 'movie_genre.genre_id', '=', 'genre.id');
+                            }))
+                        ->where('name', 'LIKE', '%' . $name . '%')
+                        ->skip($offset)
+                        ->take($rows)
+                        ->get();
+                            
+        $result = array();
+        $result['total'] = $count;
+        $result['rows'] = $movieList;
+        
+        return $result;
     }
 
 }

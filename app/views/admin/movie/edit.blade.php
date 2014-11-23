@@ -21,10 +21,10 @@
 					{{ Form::label('Киноны ангилал:') }}
 					<br>
 
-					<?php $count = 1; ?>
+					
 					@foreach($genres as $genre)
-					<input type="checkbox" name="genres[]" value="{{ $count }}" @if(in_array($count,$movieGenres)) checked="checked" @endif ) /> {{ $genre }}
-					<?php $count++ ?>
+					<input type="checkbox" name="genres[]" value="{{ $genre->id }}" @if(in_array($genre->id,$movieGenres)) checked="checked" @endif ) /> {{ $genre->genre_name }}
+					
 					@endforeach
 					</div>
 					<div class="form-group">

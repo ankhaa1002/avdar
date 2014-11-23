@@ -29,13 +29,20 @@
             <div class="col-sm-6 col-md-4 col-md-offset-4">
                 <h1 class="text-center login-title">Удирдлага руу нэвтрэх</h1>
                 @if(Session::has('message'))
-                <div class="alert alert-danger" role="alert"><p>{{ Session::get('message') }}</p></div>
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <p>{{ Session::get('message') }}</p>
+                </div>
                 @endif
                 @if(Session::has('logout_msg'))
-                <div class="alert alert-success" role="alert"><p>{{ Session::get('logout_msg') }}</p></div>
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <p>{{ Session::get('logout_msg') }}</p>
+                </div>
                 @endif
                 @if($errors->has())
                 <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     <li>{{ $errors->first('username') }}</li>
                     <li>{{ $errors->first('password') }}</li>
                 </div>

@@ -16,7 +16,7 @@
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
+                        <span class="sr-only">Цэс</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -26,90 +26,10 @@
                 <!-- Top Menu Items -->
                 <ul class="nav navbar-right top-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
-                        <ul class="dropdown-menu message-dropdown">
-                            <li class="message-preview">
-                                <a href="#">
-                                    <div class="media">
-                                        <span class="pull-left">
-                                            <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                        </span>
-                                        <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
-                                            </h5>
-                                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="message-preview">
-                                <a href="#">
-                                    <div class="media">
-                                        <span class="pull-left">
-                                            <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                        </span>
-                                        <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
-                                            </h5>
-                                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="message-preview">
-                                <a href="#">
-                                    <div class="media">
-                                        <span class="pull-left">
-                                            <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                        </span>
-                                        <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
-                                            </h5>
-                                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="message-footer">
-                                <a href="#">Read All New Messages</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
-                        <ul class="dropdown-menu alert-dropdown">
-                            <li>
-                                <a href="#">Alert Name <span class="label label-default">Alert Badge</span></a>
-                            </li>
-                            <li>
-                                <a href="#">Alert Name <span class="label label-primary">Alert Badge</span></a>
-                            </li>
-                            <li>
-                                <a href="#">Alert Name <span class="label label-success">Alert Badge</span></a>
-                            </li>
-                            <li>
-                                <a href="#">Alert Name <span class="label label-info">Alert Badge</span></a>
-                            </li>
-                            <li>
-                                <a href="#">Alert Name <span class="label label-warning">Alert Badge</span></a>
-                            </li>
-                            <li>
-                                <a href="#">Alert Name <span class="label label-danger">Alert Badge</span></a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="#">View All</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ $user->username }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
-                                {{ HTML::linkRoute('logout','Log Out') }}
+                                {{ HTML::linkRoute('logout','Гарах') }}
                             </li>
                         </ul>
                     </li>
@@ -175,18 +95,27 @@
         {{ HTML::script('js/jquery.validate.min.js') }}
 
         {{ HTML::script('js/jquery.easyui.min.js') }}
-        
+
         {{ HTML::script('js/plugins/easy-ui/locale/easyui-lang-mn.js') }}
 
         <script type="text/javascript">
-            jQuery(document).ready(function() {
+            $(function () {
 
-                $("#deleteForm").submit(function(e) {
+                $("#deleteMovieForm").submit(function (e) {
                     var row = $('#movie-table').datagrid('getSelected');
                     if (row == null) {
                         e.preventDefault();
-                    } else{
-                        $('#deleteForm').attr('action', 'movie/'+row.id).submit()
+                    } else {
+                        $('#deleteMovieForm').attr('action', 'movie/' + row.id).submit();
+                    }
+                });
+                
+                $('#deleteGenreForm').submit(function(e){
+                    var row = $('#genre-table').datagrid('getSelected');
+                    if (row == null) {
+                        e.preventDefault();
+                    } else {
+                        $('#deleteGenreForm').attr('action', 'genre/' + row.id).submit();
                     }
                 });
 
@@ -209,11 +138,25 @@
                     }
                 });
 
-                $("#moviecover").change(function() {
+                $("#moviecover").change(function () {
                     var ext = $('#moviecover').val().split('.').pop().toLowerCase();
                     if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
                         alert('Файлын төрөл буруу байна!');
                     }
+                });
+
+                $('#genre-table').datagrid({
+                    url: 'genrelist',
+                    pagination: true,
+                    pageSize: 20,
+                    rownumbers: true,
+                    fitColumns: true,
+                    singleSelect: true,
+                    sortName: 'name',
+                    sortOrder: 'asc',
+                    columns: [[
+                            {field: 'genre_name', title: 'Жанрын төрөл', width: 20},
+                        ]]
                 });
 
                 $('#movie-table').datagrid({
@@ -227,13 +170,13 @@
                     sortOrder: 'asc',
                     columns: [[
                             {field: 'featured_image', title: 'Зураг', width: 20,
-                                formatter: function(value, rowData, rowIndex) {
+                                formatter: function (value, rowData, rowIndex) {
                                     return '<center><img src="{{ Config::get('app.url') }}/' + rowData.featured_image + '" width="80" height="100"/></center>';
                                 }
                             },
                             {field: 'name', title: 'Киноны нэр', width: 20},
                             {field: 'genres', title: 'Киноны ангилал',
-                                formatter: function(value, rowData, rowIndex) {
+                                formatter: function (value, rowData, rowIndex) {
                                     var genre_types = '';
                                     var counter = 0;
                                     var size = rowData.genres.length;
@@ -260,16 +203,43 @@
 
             });
 
+
+
             function editMovie() {
                 $row = $('#movie-table').datagrid('getSelected');
                 if ($row != null) {
-                    window.location.href = 'movie/' + $row['id'] + '/edit';
+                    window.location.href = 'movie/' + $row.id + '/edit';
                 }
                 else {
                     alert('Сонгоно уу!')
                 }
 
             }
+
+            function editGenre() {
+                $row = $('#genre-table').datagrid('getSelected');
+                if ($row != null) {
+                    window.location.href = 'genre/' + $row.id + '/edit';
+                }
+                else {
+                    alert('Сонгоно уу!')
+                }
+            }
+
+
+            function filterMovie() {
+                $('#movie-table').datagrid('load', {
+                    movie_name: $('#movie_name').val()
+                });
+            }
+
+            function filterGenre() {
+                $('#genre-table').datagrid('load', {
+                    genre_name: $('#genre_name').val()
+                });
+            }
+
+
 
         </script>
 
