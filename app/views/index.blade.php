@@ -13,7 +13,7 @@
                     <a href="movie/{{$movie->id}}">
                         <figure>
                             <p>
-                                <img src="{{ $movie->featured_image }}" width="160" height="238" alt="Lucy">
+                                <img src="{{ $movie->featured_image }}" width="160" height="238" alt="{{ $movie->name }}">
                             </p>
                             <div class="description clearfix">
                                 <h6>
@@ -34,7 +34,7 @@
                                     <i>{{ $movie->rating }}</i>
                                 </span>
                             </div>
-                            <figcaption>{{ $movie->name }}</figcaption>
+                            <figcaption>{{ $movie->name }} ({{ substr($movie->release_date,0,4) }})</figcaption>
                         </figure>
                     </a>
                 </li>

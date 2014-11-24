@@ -25,8 +25,8 @@
                         </i>
                     </li>
                     <li class="clearfix"><span class="title">Гарсан он</span><i>{{ substr($movie->release_date,0,4) }}</i></li>
-                    <li class="clearfix"><span class="title">Гарсан огноо</span><i itemprop="dateCreated">{{ $movie->release_date }}</i></li>
-                    <li class="clearfix"><span class="title" itemprop="director" itemscope="" itemtype="http://schema.org/Person">Найрлуулагч</span><i itemprop="name">{{ $movie->director }}</i></li>
+                    <li class="clearfix"><span class="title">Гарсан огноо</span><i>{{ $movie->release_date }}</i></li>
+                    <li class="clearfix"><span class="title">Найрлуулагч</span><i>{{ $movie->director }}</i></li>
                     <li class="clearfix"><span class="title">Дүрүүдэд</span><i><p>{{ $movie->cast }}</p>  </i></li>
 
                 </ul>
@@ -37,7 +37,7 @@
 
         <section class="video-section">
             <header>
-                <h3>movie Trailer</h3>
+                <h3>кино танилцуулга</h3>
                 <div class="video-div">
                     <center>{{ $movie->movie_trailer }}</center>
                 </div>
@@ -154,26 +154,33 @@
             <header>
                 <h3>Үзэгчдийн сэтгэгдэл</h3>
             </header>
-            <form action="" method="get" name="discussion_form" id="discussion_form" novalidate="novalidate">
-                <dl>
-                    <dt><label for="name">Таны нэр</label></dt>
-                    <dd>
-                        <input type="text" name="name" id="name" value="" placeholder="Нэр" required="">
-                        <span class="error" style="display:none;">Нэрээ оруулна уу</span>
-                    </dd>
+            {{ Form::open(array('url'=>'movie/comment','id'=>'discussion_form','name'=>'discussion_form','novalidate'=>'novalidate')) }}
+            <dl>
+                {{Form::hidden('m_id',$movie->id)}}
+                @if(Session::has('messages'))
+                @foreach(Session::get('messages')->all() as $message)
+                <span class="error" style="display:block;">{{ $message }}</span>
+                @endforeach
+                @endif
+                <dt><label for="name">Таны нэр</label></dt>
+                <dd>
+                    {{ Form::text('name', '', array('placeholder'=>'Нэр','id'=>'name','required'=>'')) }}
+                </dd>
 
-                    <dt><label for="comment">Сэтгэгдэл</label></dt>
-                    <dd><textarea name="text" id="comment" placeholder="Өөрийнхөө сэтгэгдлийг бидэнтэй хуваалцана уу :)" required=""></textarea></dd>
-                </dl>
-                <div>
-                    <button type="submit" name="submit_comment" class="but1">Оруулах</button>
-                </div>
-            </form>
+                <dt><label for="comment">Сэтгэгдэл</label></dt>
+                <dd>
+                    {{ Form::textarea('comment', '', array('placeholder'=>'Өөрийнхөө сэтгэгдлийг бидэнтэй хуваалцана уу :)','id'=>'comment')) }}
+                </dd>
+            </dl>
+            <div>
+                <button name="submit_comment" class="but1">Оруулах</button>
+            </div>
+            {{ Form::close() }}
             <div class="scroll-pane" style="overflow: hidden; padding: 0px; width: 320px;">
 
                 <div class="jspContainer" style="width: 320px; height: 908px;">
                     <div class="jspPane" style="padding: 0px; top: 0px; left: 0px; width: 320px;"><article class="some-comment">
-                        @foreach($comments as $comment)
+                            @foreach($comments as $comment)
                             <article class="some-comment">
                                 <header>
                                     <h6>{{ $comment->name }} <time>{{ $comment->created_date }}</time></h6>
@@ -183,7 +190,7 @@
                                     <p>{{ $comment->content }}</p>
                                 </div>
                             </article>
-                        @endforeach
+                            @endforeach
                     </div>
                 </div>
             </div> 

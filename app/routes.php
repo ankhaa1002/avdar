@@ -37,3 +37,4 @@ Route::post('admin/genrelist', array('as'=>'genre_list','uses'=>'GenreController
  */
 Route::get('/', array('uses' => 'MainController@index'));
 Route::get('movie/{movie}',array('as'=>'show_movie','uses'=>'MainController@show'));
+Route::post('movie/comment',array('as'=>'save_comment','uses'=>'MainController@store_comment'));
