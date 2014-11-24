@@ -25,6 +25,7 @@
                 </div>
                 <!-- Top Menu Items -->
                 <ul class="nav navbar-right top-nav">
+                    <li><a target="_blank" href="{{ Config::get('app.url') }}">Сайт руу орох</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ $user->username }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">

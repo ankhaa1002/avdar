@@ -11,8 +11,9 @@
   |
  */
 
-Route::get('/', array('uses' => 'MainController@index'));
-
+/**
+ * Admin Routes
+ */
 Route::get('admin/login', array('as' => 'admin_login', 'uses' => 'AdminController@showLogin'));
 
 Route::get('admin', array('as' => 'admin_index', 'uses' => 'AdminController@showIndex'));
@@ -30,3 +31,9 @@ Route::post('admin/movielist', array('as'=>'movie_list','uses'=>'MovieController
 Route::resource('admin/genre', 'GenreController');
 
 Route::post('admin/genrelist', array('as'=>'genre_list','uses'=>'GenreController@getGenreList'));
+
+/**
+ * Main Routes
+ */
+Route::get('/', array('uses' => 'MainController@index'));
+Route::get('movie/{movie}',array('as'=>'show_movie','uses'=>'MainController@show'));
